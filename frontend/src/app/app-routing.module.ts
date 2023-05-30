@@ -10,8 +10,8 @@ const routes: Routes = [
 
   { path: 'add', component: AddComponent },
   { path: 'update', component: UpdateComponent },
-  { path: 'show', component: ShowComponent },
-  { path: '**', component: ShowComponent }
+  { path: '', component: ShowComponent },
+  { path: '**', redirectTo: '/' }
 ];
 
 @NgModule({
