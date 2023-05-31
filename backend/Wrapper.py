@@ -2,6 +2,8 @@ import pymssql
 from pymssql import output
 from pymssql import _mssql
 
+import json
+
 class WrapperDB:
     
     conn = 0
@@ -68,6 +70,7 @@ class WrapperDB:
         self.disconnetti(conn)
         return lista
   
+  
     def getLog(self, as_dict = False):
         conn = self.connetti()
         lista = []
@@ -81,6 +84,9 @@ class WrapperDB:
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
+        
+        for x in lista:
+            x['DataOra'] = str(x['DataOra'])
         return lista
         
     def addLog(self, parametri):
@@ -133,6 +139,155 @@ class WrapperDB:
                 ret = False        
         except Exception as err:
             print("********** ERRORE [delete V_Log] **********")
+            print(str(err))     
+            print("*******************************************")              
+            ret = False
+        self.disconnetti(conn)
+        return ret
+    
+    
+    
+    
+    
+    def getSpecie(self, as_dict = False):
+        conn = self.connetti()
+        lista = []
+        try:
+            cur = conn.cursor(as_dict = as_dict)
+            query = "SELECT * FROM V_Specie"
+            cur.execute(query)
+            lista = cur.fetchall()
+        except Exception as err: 
+            print(f"********** ERRORE [select V_Specie] **********")
+            print(str(err))     
+            print("*******************************************")   
+        self.disconnetti(conn)
+        return lista
+        
+    def addSpecie(self, parametri):
+        conn = self.connetti() 
+        ret = True
+        try:
+            cursore = conn.cursor()
+            sql = "INSERT INTO V_Specie (nome, tipo) VALUES (%s , %s)"
+            cursore.execute(sql, parametri)
+            conn.commit()
+        except Exception as err: 
+            print("********** ERRORE [insert V_Specie] **********")
+            print(str(err))     
+            print("*********************************************")  
+            ret = False
+        self.disconnetti(conn)
+        return ret
+    
+    def modifySpecie(self, id, parametri):
+        ret = True
+        conn = self.connetti() 
+        try:
+            parametri = parametri + (id,)
+            cursore = conn.cursor()
+            sql = "UPDATE V_Specie SET nome = %s, tipo = %s WHERE ID = %d"
+            cursore.execute(sql, parametri)
+            conn.commit()
+            #se l'id passato non esiste restituisco comunque False
+            if (cursore.rowcount < 1):
+                ret = False
+        except Exception as err:
+            print("********** ERRORE [update V_Specie] **********")
+            print(str(err))     
+            print("********************************************")  
+            ret = False
+        self.disconnetti(conn)
+        return ret
+    
+    
+    def deleteSpecie(self, id):
+        ret = True
+        conn = self.connetti() 
+        try:
+            cursore = conn.cursor()
+            sql = "DELETE V_Specie WHERE id = %d"
+            cursore.execute(sql, id)
+            conn.commit()   
+            #se l'id passato non esiste restituisco comunque False
+            if (cursore.rowcount < 1):
+                ret = False        
+        except Exception as err:
+            print("********** ERRORE [delete V_Specie] **********")
+            print(str(err))     
+            print("*******************************************")              
+            ret = False
+        self.disconnetti(conn)
+        return ret
+    
+    
+    
+    
+    def getCibo(self, as_dict = False):
+        conn = self.connetti()
+        lista = []
+        try:
+            cur = conn.cursor(as_dict = as_dict)
+            query = "SELECT * FROM V_Cibo"
+            cur.execute(query)
+            lista = cur.fetchall()
+        except Exception as err: 
+            print(f"********** ERRORE [select V_Cibo] **********")
+            print(str(err))     
+            print("*******************************************")   
+        self.disconnetti(conn)
+        return lista
+        
+    def addCibo(self, parametri):
+        conn = self.connetti() 
+        ret = True
+        try:
+            cursore = conn.cursor()
+            sql = "INSERT INTO V_Cibo (idesemplari, tipo, PianoTemporale) VALUES (%d , %s, %s)"
+            cursore.execute(sql, parametri)
+            conn.commit()
+        except Exception as err: 
+            print("********** ERRORE [insert V_Cibo] **********")
+            print(str(err))     
+            print("*********************************************")  
+            ret = False
+        self.disconnetti(conn)
+        return ret
+    
+    def modifyCibo(self, id, parametri):
+        ret = True
+        conn = self.connetti() 
+        try:
+            parametri = parametri + (id,)
+            cursore = conn.cursor()
+            sql = "UPDATE V_Cibo SET idesemplari = %d, tipo = %s, pianotemporale = %s WHERE ID = %d"
+            cursore.execute(sql, parametri)
+            conn.commit()
+            #se l'id passato non esiste restituisco comunque False
+            if (cursore.rowcount < 1):
+                ret = False
+        except Exception as err:
+            print("********** ERRORE [update V_Cibo] **********")
+            print(str(err))     
+            print("********************************************")  
+            ret = False
+        self.disconnetti(conn)
+        return ret
+    
+    
+    def deleteCibo(self, id):
+        ret = True
+        conn = self.connetti() 
+        try:
+            cursore = conn.cursor()
+            sql = "DELETE V_Cibo WHERE id = %d"
+            cursore.execute(sql, id)
+            conn.commit()   
+            #se l'id passato non esiste restituisco comunque False
+            if (cursore.rowcount < 1):
+                ret = False        
+        except Exception as err:
+            print("********** ERRORE [delete V_Cibo] **********")
             print(str(err))     
             print("*******************************************")              
             ret = False
