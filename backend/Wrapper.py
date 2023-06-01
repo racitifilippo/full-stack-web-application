@@ -55,39 +55,38 @@ class WrapperDB:
         
     
     
-    def getEsemplari(self, as_dict = False):
+    def getEsemplari(self, as_dict = False, id=-1):
+        id = int(id)
         conn = self.connetti()
         lista = []
         try:
             cur = conn.cursor(as_dict = as_dict)
-            query = "SELECT * FROM V_Esemplari"
-            cur.execute(query)
+            query = "SELECT * FROM V_Esemplari" + (" WHERE id = %d" if id != -1 else "")
+            cur.execute(query, (id) if id != -1 else ())
             lista = cur.fetchall()
         except Exception as err: 
             print(f"********** ERRORE [select V_Esemplari] **********")
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        return lista
+        return lista[0] if len(lista) == 1 else lista
   
   
-    def getLog(self, as_dict = False):
+    def getLog(self, as_dict = False, id=-1):
+        id = int(id)
         conn = self.connetti()
         lista = []
         try:
             cur = conn.cursor(as_dict = as_dict)
-            query = "SELECT * FROM V_Log"
-            cur.execute(query)
+            query = "SELECT * FROM V_Log" + (" WHERE id = %d" if id != -1 else "")
+            cur.execute(query, (id) if id != -1 else ())
             lista = cur.fetchall()
         except Exception as err: 
             print(f"********** ERRORE [select V_Log] **********")
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        
-        for x in lista:
-            x['DataOra'] = str(x['DataOra'])
-        return lista
+        return lista[0] if len(lista) == 1 else lista
         
     def addLog(self, parametri):
         conn = self.connetti() 
@@ -149,20 +148,20 @@ class WrapperDB:
     
     
     
-    def getSpecie(self, as_dict = False):
+    def getSpecie(self, as_dict = False, nome=-1):
         conn = self.connetti()
         lista = []
         try:
             cur = conn.cursor(as_dict = as_dict)
-            query = "SELECT * FROM V_Specie"
-            cur.execute(query)
+            query = "SELECT * FROM V_Specie" + (" WHERE nome = %s" if nome != -1 else "")
+            cur.execute(query, (nome) if nome != -1 else ())
             lista = cur.fetchall()
         except Exception as err: 
             print(f"********** ERRORE [select V_Specie] **********")
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        return lista
+        return lista[0] if len(lista) == 1 else lista
         
     def addSpecie(self, parametri):
         conn = self.connetti() 
@@ -223,20 +222,21 @@ class WrapperDB:
     
     
     
-    def getCibo(self, as_dict = False):
+    def getCibo(self, as_dict = False, id=-1):
+        id = int(id)
         conn = self.connetti()
         lista = []
         try:
             cur = conn.cursor(as_dict = as_dict)
-            query = "SELECT * FROM V_Cibo"
-            cur.execute(query)
+            query = "SELECT * FROM V_Cibo" + (" WHERE id = %d" if id != -1 else "")
+            cur.execute(query, (id) if id != -1 else ())
             lista = cur.fetchall()
         except Exception as err: 
             print(f"********** ERRORE [select V_Cibo] **********")
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        return lista
+        return lista[0] if len(lista) == 1 else lista
         
     def addCibo(self, parametri):
         conn = self.connetti() 

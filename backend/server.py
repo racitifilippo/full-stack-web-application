@@ -12,17 +12,11 @@ class EsemplariController(object):
     @cherrypy.expose
     @cherrypy.tools.json_out() #NOTA: ricordarsi di aggiungere questo decoratore se vogliamo l'output in formato json!!!
     def GET(self, id=-1):
-        log = self.wrp.getEsemplari(as_dict=True)
-        if (int(id) == -1):
-            return log
-        else:
-            for x in log:
-                if x['ID'] == int(id):
-                    return log[log.index(x)]
-            else:
-                cherrypy.response.status = 404
-                return {} 
-
+        log = self.wrp.getEsemplari(as_dict=True, id=id)
+        if len(log) == 0:
+            cherrypy.response.status = 404
+            return {"response": "Errore 404"} 
+        return log
 
 class LogController(object):
     wrp = WrapperDB()
