@@ -14,3 +14,6 @@ SELECT * FROM V_Cibo
 --insert into V_Sale(IDAcquario, tema) values(1, 'tema 1'),(2, 'tema 2'),(3, 'tema 3'),(4, 'tema 4')
 --insert into v_log(dataora, motivo, idesemplari) values ('2023-05-30 22:02:55', 'solo te lo sai', 3), ('2023-05-30 22:03:43', 'a boh', 4), ('2023-05-30 22:05:07', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', 5)
 --insert into v_cibo(idesemplari, tipo, PianoTemporale) values (3, 'solido', '19:17:32'), (3, 'liquido', '19:18:52'), (5, 'solido', '19:20:01')
+
+
+SELECT max(nome) FROM V_Specie

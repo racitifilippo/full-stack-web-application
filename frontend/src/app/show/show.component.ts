@@ -8,11 +8,10 @@ import { HttpClient }  from'@angular/common/http';
 })
 export class ShowComponent implements OnInit{
 
-  //deleteCondition: boolean = true
-
   items = []
   titlesItems = []
   activeTable = 'Esemplari'
+
 
   constructor(private httpClient : HttpClient){}
 
@@ -51,18 +50,27 @@ export class ShowComponent implements OnInit{
   }
 
 
+  delete_button(x, set: boolean) {
+    if(!set){
+      x['deleteCondition'] = set
+    }else{
+      this.httpClient
+      .delete<any>(
+        "http://127.0.0.1:8080/" + this.activeTable.toLowerCase() + "/DELETE?" + (this.activeTable == 'Specie' ? 'nome=' : 'id=') + x[(this.activeTable == 'Specie' ? 'Nome' : 'ID')]
+        )
+      .subscribe({
+        next: ris => {
+          console.log(ris)
+          this.getData(this.activeTable)
+        },
+        error: error => {
+          console.error('Error --> ', error);
+          
+      }
+    }
+      )
+  }
 
-
-
-
-  
-delete_button(x, set: boolean) {
-  // for (let x of this.items) {
-  //   if (x['id'] == id){
-  //     x['deleteCondition'] = set
-  //   }
-  // }
-  x['deleteCondition'] = set
 }
 
 

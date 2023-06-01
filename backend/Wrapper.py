@@ -94,7 +94,7 @@ class WrapperDB:
         conn = self.connetti() 
         try:
             cursore = conn.cursor()
-            sql = "INSERT INTO V_Log (dataora, motivo, idesemplari) VALUES (%s , %s, %d); SELECT max(id) FROM V_Log"
+            sql = "INSERT INTO V_Log (DataOra, Motivo, IDEsemplari) VALUES (%s , %s, %d); SELECT max(id) FROM V_Log"
             cursore.execute(sql, parametri)
             id = cursore.fetchall()[0][0]
             conn.commit()
@@ -112,7 +112,7 @@ class WrapperDB:
         try:
             parametri = parametri + (id,)
             cursore = conn.cursor()
-            sql = "UPDATE V_Log SET dataora = %s, motivo = %s, idesemplari = %d WHERE ID = %d"
+            sql = "UPDATE V_Log SET DataOra = %s, Motivo = %s, IDEsemplari = %d WHERE ID = %d"
             cursore.execute(sql, parametri)
             conn.commit()
 
@@ -155,7 +155,7 @@ class WrapperDB:
         lista = []
         try:
             cur = conn.cursor(as_dict = as_dict)
-            query = "SELECT * FROM V_Specie" + (" WHERE nome = %s" if nome != -1 else "")
+            query = "SELECT * FROM V_Specie" + (" WHERE Nome = %s" if nome != -1 else "")
             cur.execute(query, (nome) if nome != -1 else ())
             lista = cur.fetchall()
         except Exception as err: 
@@ -167,9 +167,10 @@ class WrapperDB:
         
     def addSpecie(self, parametri):
         conn = self.connetti() 
+        nome = 1
         try:
             cursore = conn.cursor()
-            sql = "INSERT INTO V_Specie (nome, tipo) VALUES (%s , %s)"
+            sql = "INSERT INTO V_Specie (Nome, Tipo) VALUES (%s , %s)"
             cursore.execute(sql, parametri)
             conn.commit()
         except Exception as err: 
@@ -178,7 +179,7 @@ class WrapperDB:
             print("*********************************************")  
             nome = -1
         self.disconnetti(conn)
-        return {"nome": parametri[0]} if nome != -1 else -1
+        return {"Nome": parametri[0]} if nome != -1 else -1
     
     def modifySpecie(self, nome, parametri):
         ret = True
@@ -186,7 +187,7 @@ class WrapperDB:
         try:
             parametri = parametri + (nome,)
             cursore = conn.cursor()
-            sql = "UPDATE V_Specie SET nome = %s, tipo = %s WHERE nome = %d"
+            sql = "UPDATE V_Specie SET Nome = %s, Tipo = %s WHERE Nome = %d"
             cursore.execute(sql, parametri)
             conn.commit()
 
@@ -206,7 +207,7 @@ class WrapperDB:
         conn = self.connetti() 
         try:
             cursore = conn.cursor()
-            sql = "DELETE V_Specie WHERE nome = %d"
+            sql = "DELETE V_Specie WHERE Nome = %d"
             cursore.execute(sql, nome)
             conn.commit()   
 
@@ -231,7 +232,7 @@ class WrapperDB:
         lista = []
         try:
             cur = conn.cursor(as_dict = as_dict)
-            query = "SELECT * FROM V_Cibo" + (" WHERE id = %d" if id != -1 else "")
+            query = "SELECT * FROM V_Cibo" + (" WHERE ID = %d" if id != -1 else "")
             cur.execute(query, (id) if id != -1 else ())
             lista = cur.fetchall()
             for x in lista:
@@ -247,7 +248,7 @@ class WrapperDB:
         conn = self.connetti() 
         try:
             cursore = conn.cursor()
-            sql = "INSERT INTO V_Cibo (idesemplari, tipo, PianoTemporale) VALUES (%d , %s, %s); SELECT max(id) FROM V_Cibo"
+            sql = "INSERT INTO V_Cibo (IDEsemplari, Tipo, PianoTemporale) VALUES (%d , %s, %s); SELECT max(id) FROM V_Cibo"
             cursore.execute(sql, parametri)
             id = cursore.fetchall()[0][0]
             conn.commit()
@@ -265,7 +266,7 @@ class WrapperDB:
         try:
             parametri = parametri + (id,)
             cursore = conn.cursor()
-            sql = "UPDATE V_Cibo SET idesemplari = %d, tipo = %s, PianoTemporale = %s WHERE ID = %d"
+            sql = "UPDATE V_Cibo SET IDEsemplari = %d, Tipo = %s, PianoTemporale = %s WHERE ID = %d"
             cursore.execute(sql, parametri)
             conn.commit()
 
