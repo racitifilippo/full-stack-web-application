@@ -67,7 +67,7 @@ class WrapperDB:
         except Exception as err: 
             print(f"********** ERRORE [select V_Esemplari] **********")
             print(str(err))     
-            print("*******************************************")   
+            print("*******************************************")
         self.disconnetti(conn)
         return lista[0] if len(lista) == 1 else lista
   
@@ -81,6 +81,8 @@ class WrapperDB:
             query = "SELECT * FROM V_Log" + (" WHERE id = %d" if id != -1 else "")
             cur.execute(query, (id) if id != -1 else ())
             lista = cur.fetchall()
+            for x in lista:
+                x['DataOra'] = str(x['DataOra'])
         except Exception as err: 
             print(f"********** ERRORE [select V_Log] **********")
             print(str(err))     
@@ -90,19 +92,19 @@ class WrapperDB:
         
     def addLog(self, parametri):
         conn = self.connetti() 
-        ret = True
         try:
             cursore = conn.cursor()
-            sql = "INSERT INTO V_Log (dataora, motivo, idesemplari) VALUES (%s , %s, %d)"
+            sql = "INSERT INTO V_Log (dataora, motivo, idesemplari) VALUES (%s , %s, %d); SELECT max(id) FROM V_Log"
             cursore.execute(sql, parametri)
+            id = cursore.fetchall()[0][0]
             conn.commit()
         except Exception as err: 
             print("********** ERRORE [insert V_Log] **********")
             print(str(err))     
             print("*********************************************")  
-            ret = False
+            id = -1
         self.disconnetti(conn)
-        return ret
+        return {"id": id} if id != -1 else -1
     
     def modifyLog(self, id, parametri):
         ret = True
@@ -113,7 +115,7 @@ class WrapperDB:
             sql = "UPDATE V_Log SET dataora = %s, motivo = %s, idesemplari = %d WHERE ID = %d"
             cursore.execute(sql, parametri)
             conn.commit()
-            #se l'id passato non esiste restituisco comunque False
+
             if (cursore.rowcount < 1):
                 ret = False
         except Exception as err:
@@ -122,7 +124,7 @@ class WrapperDB:
             print("********************************************")  
             ret = False
         self.disconnetti(conn)
-        return ret
+        return {"id": id} if ret else -1
     
     
     def deleteLog(self, id):
@@ -133,7 +135,7 @@ class WrapperDB:
             sql = "DELETE V_Log WHERE id = %d"
             cursore.execute(sql, id)
             conn.commit()   
-            #se l'id passato non esiste restituisco comunque False
+
             if (cursore.rowcount < 1):
                 ret = False        
         except Exception as err:
@@ -142,7 +144,7 @@ class WrapperDB:
             print("*******************************************")              
             ret = False
         self.disconnetti(conn)
-        return ret
+        return {"id": id} if ret else -1
     
     
     
@@ -165,7 +167,6 @@ class WrapperDB:
         
     def addSpecie(self, parametri):
         conn = self.connetti() 
-        ret = True
         try:
             cursore = conn.cursor()
             sql = "INSERT INTO V_Specie (nome, tipo) VALUES (%s , %s)"
@@ -175,20 +176,20 @@ class WrapperDB:
             print("********** ERRORE [insert V_Specie] **********")
             print(str(err))     
             print("*********************************************")  
-            ret = False
+            nome = -1
         self.disconnetti(conn)
-        return ret
+        return {"nome": parametri[0]} if nome != -1 else -1
     
-    def modifySpecie(self, id, parametri):
+    def modifySpecie(self, nome, parametri):
         ret = True
         conn = self.connetti() 
         try:
-            parametri = parametri + (id,)
+            parametri = parametri + (nome,)
             cursore = conn.cursor()
-            sql = "UPDATE V_Specie SET nome = %s, tipo = %s WHERE ID = %d"
+            sql = "UPDATE V_Specie SET nome = %s, tipo = %s WHERE nome = %d"
             cursore.execute(sql, parametri)
             conn.commit()
-            #se l'id passato non esiste restituisco comunque False
+
             if (cursore.rowcount < 1):
                 ret = False
         except Exception as err:
@@ -197,18 +198,18 @@ class WrapperDB:
             print("********************************************")  
             ret = False
         self.disconnetti(conn)
-        return ret
+        return {"nome": nome} if ret else -1
     
     
-    def deleteSpecie(self, id):
+    def deleteSpecie(self, nome):
         ret = True
         conn = self.connetti() 
         try:
             cursore = conn.cursor()
-            sql = "DELETE V_Specie WHERE id = %d"
-            cursore.execute(sql, id)
+            sql = "DELETE V_Specie WHERE nome = %d"
+            cursore.execute(sql, nome)
             conn.commit()   
-            #se l'id passato non esiste restituisco comunque False
+
             if (cursore.rowcount < 1):
                 ret = False        
         except Exception as err:
@@ -217,11 +218,13 @@ class WrapperDB:
             print("*******************************************")              
             ret = False
         self.disconnetti(conn)
-        return ret
+        return {"nome": nome} if ret else -1
     
     
     
     
+  
+  
     def getCibo(self, as_dict = False, id=-1):
         id = int(id)
         conn = self.connetti()
@@ -231,6 +234,8 @@ class WrapperDB:
             query = "SELECT * FROM V_Cibo" + (" WHERE id = %d" if id != -1 else "")
             cur.execute(query, (id) if id != -1 else ())
             lista = cur.fetchall()
+            for x in lista:
+                x['PianoTemporale'] = str(x['PianoTemporale'])
         except Exception as err: 
             print(f"********** ERRORE [select V_Cibo] **********")
             print(str(err))     
@@ -240,19 +245,19 @@ class WrapperDB:
         
     def addCibo(self, parametri):
         conn = self.connetti() 
-        ret = True
         try:
             cursore = conn.cursor()
-            sql = "INSERT INTO V_Cibo (idesemplari, tipo, PianoTemporale) VALUES (%d , %s, %s)"
+            sql = "INSERT INTO V_Cibo (idesemplari, tipo, PianoTemporale) VALUES (%d , %s, %s); SELECT max(id) FROM V_Cibo"
             cursore.execute(sql, parametri)
+            id = cursore.fetchall()[0][0]
             conn.commit()
         except Exception as err: 
             print("********** ERRORE [insert V_Cibo] **********")
             print(str(err))     
             print("*********************************************")  
-            ret = False
+            id = -1
         self.disconnetti(conn)
-        return ret
+        return {"id": id} if id != -1 else -1
     
     def modifyCibo(self, id, parametri):
         ret = True
@@ -260,10 +265,10 @@ class WrapperDB:
         try:
             parametri = parametri + (id,)
             cursore = conn.cursor()
-            sql = "UPDATE V_Cibo SET idesemplari = %d, tipo = %s, pianotemporale = %s WHERE ID = %d"
+            sql = "UPDATE V_Cibo SET idesemplari = %d, tipo = %s, PianoTemporale = %s WHERE ID = %d"
             cursore.execute(sql, parametri)
             conn.commit()
-            #se l'id passato non esiste restituisco comunque False
+
             if (cursore.rowcount < 1):
                 ret = False
         except Exception as err:
@@ -272,7 +277,7 @@ class WrapperDB:
             print("********************************************")  
             ret = False
         self.disconnetti(conn)
-        return ret
+        return {"id": id} if ret else -1
     
     
     def deleteCibo(self, id):
@@ -283,7 +288,7 @@ class WrapperDB:
             sql = "DELETE V_Cibo WHERE id = %d"
             cursore.execute(sql, id)
             conn.commit()   
-            #se l'id passato non esiste restituisco comunque False
+
             if (cursore.rowcount < 1):
                 ret = False        
         except Exception as err:
@@ -292,7 +297,5 @@ class WrapperDB:
             print("*******************************************")              
             ret = False
         self.disconnetti(conn)
-        return ret
-        
-    # anche per specie e cibo
+        return {"id": id} if ret else -1
     
