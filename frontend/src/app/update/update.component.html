@@ -1,1 +1,16 @@
-<p>update works!</p>
+<button (click)="home_page()" class="btn btn-primary m-0 mt-2 ms-2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg> Home</button>
+<div class="card p-4 pt-3 m-5 mt-2 border border-3">
+
+    <h3 class="text-center">Modifica la tabella {{activeTable}}</h3>
+
+    <div *ngFor="let header of headers" class="input-group mb-3">
+        <span class="input-group-text fw-semibold">{{header}}</span>
+        <input [(ngModel)]="data[header]" type="text" class="form-control">
+    </div>
+
+    <button (click)="update_data()" [disabled]="activeTable == 'Esemplari' ? true : false" class="btn btn-primary mt-3 mx-5 fw-bold" (click)="true">Modifica</button>
+
+    <p [style.display]="showSuccess ? 'block' : 'none'" class="text-center mt-3 mb-0 text-success fw-bold">Modificato</p>
+    <p [style.display]="showError ? 'block' : 'none'" class="text-center mt-3 mb-0 text-danger fw-bold">Errore</p>
+
+</div>

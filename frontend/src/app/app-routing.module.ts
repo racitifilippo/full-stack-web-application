@@ -7,10 +7,9 @@ import { UpdateComponent } from './update/update.component';
 import { ShowComponent } from './show/show.component';
 
 const routes: Routes = [
-
-  { path: 'add/:tableName/:tableHeaders', component: AddComponent, data :{ id:'1', name:"Angular"}},
-  { path: 'update', component: UpdateComponent },
-  { path: '', component: ShowComponent },
+  { path: 'add', component: AddComponent},
+  { path: 'update', component: UpdateComponent},
+  { path: '', component: ShowComponent},
   { path: '**', redirectTo: '/' }
 ];
 

@@ -1,14 +1,10 @@
 import pymssql
-from pymssql import output
 from pymssql import _mssql
-
-import json
 
 class WrapperDB:
     
     conn = 0
     
-    #def __init__(self, server="PCPAOLO\SQLEXPRESS", user="sa", password="Password1!", database="5DINF", port="1433"):
     #def __init__(self, server="192.168.40.16\\SQLEXPRESS", user="CRD2122",
     def __init__(self, server="5.172.64.20\\SQLEXPRESS", user="CRD2122",
                password="xxx123##", database="CRD2122"):
@@ -19,7 +15,6 @@ class WrapperDB:
         
         
     def connetti(self):
-        #connessione
         try:
             WrapperDB.conn = pymssql.connect(server = self._server, user = self._user, \
                         password = self._password, database = self._database)
@@ -40,20 +35,14 @@ class WrapperDB:
         return 
 
 
-    def disconnetti(self, co):
-        #disconnessione	
+    def disconnetti(self, co):	
         try:
             co.close()
-        #    print(f"\nCHIUSURA connessione! (DB: {self._database})\n") 
-        #except:
-        #    print(f"\nCHIUSURA connessione NON riuscita! (DB: {self._database})\n")
-        #    return 0
         except Exception as err: 
             print("********** ERRORE [disconnetti] **********")
             print(str(err))     
             print("******************************************")     
         
-    
     
     def getEsemplari(self, as_dict = False, id=-1):
         id = int(id)
@@ -69,7 +58,8 @@ class WrapperDB:
             print(str(err))     
             print("*******************************************")
         self.disconnetti(conn)
-        return lista[0] if len(lista) == 1 else lista
+        # return lista[0] if len(lista) == 1 else lista
+        return lista
   
   
     def getLog(self, as_dict = False, id=-1):
@@ -88,7 +78,8 @@ class WrapperDB:
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        return lista[0] if len(lista) == 1 else lista
+        # return lista[0] if len(lista) == 1 else lista
+        return lista
         
     def addLog(self, parametri):
         conn = self.connetti() 
@@ -163,7 +154,8 @@ class WrapperDB:
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        return lista[0] if len(lista) == 1 else lista
+        # return lista[0] if len(lista) == 1 else lista
+        return  lista
         
     def addSpecie(self, parametri):
         conn = self.connetti() 
@@ -242,7 +234,8 @@ class WrapperDB:
             print(str(err))     
             print("*******************************************")   
         self.disconnetti(conn)
-        return lista[0] if len(lista) == 1 else lista
+        # return lista[0] if len(lista) == 1 else lista
+        return lista
         
     def addCibo(self, parametri):
         conn = self.connetti() 

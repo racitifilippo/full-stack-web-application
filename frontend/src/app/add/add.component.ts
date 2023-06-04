@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient }  from'@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { __param } from 'tslib';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-add',
   templateUrl: './add.component.html',
   styleUrls: ['./add.component.css']
 })
-export class AddComponent implements OnInit {
+export class AddComponent {
 
   headers = ['DataOra', 'Motivo', 'IDEsemplari']
   activeTable: string = 'Esemplari'
 
-  constructor(private httpClient : HttpClient, private route:ActivatedRoute){
-    this.route.params.subscribe( params =>{
-      this.activeTable = params.tableName
-      this.headers = JSON.parse('["' + params.tableHeaders.split(',').join('", "') + '"]')
+  constructor(private httpClient : HttpClient, private router:Router){
+    if (this.router.getCurrentNavigation().extras.state){
+      this.headers = router.getCurrentNavigation().extras.state.headers
       if (this.headers.includes('ID')){
         this.headers.splice(this.headers.indexOf('ID'), 1)
       }
+
+      this.activeTable = router.getCurrentNavigation().extras.state.table
     }
-      );
   }
+  
   
   showError = false
   showSuccess = false
@@ -41,15 +41,20 @@ export class AddComponent implements OnInit {
     'deleteCondition': true
   }
   
+  home_page(){
+    let nav: NavigationExtras = {
+      state: {
+        table: this.activeTable
+      }
+    }
+    this.router.navigate([''], nav)
+  }
   
-  ngOnInit() {
-    
-}
-
   addData(){
     this.httpClient
     .post<any>(
-      "http://127.0.0.1:8080/" + this.activeTable.toLowerCase() + "/POST", this.data
+      `http://127.0.0.1:8080/${this.activeTable.toLowerCase()}/POST`,
+      this.data
       )
     .subscribe({
       next: ris => {
